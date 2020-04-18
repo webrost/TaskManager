@@ -9,5 +9,7 @@ namespace TaskManager.Models
     {
         public int update_id { get; set; }
         public TelMessage message { get; set; }
+
+        public TelCallbackQuery callback_query { get; set; }
     }
 }

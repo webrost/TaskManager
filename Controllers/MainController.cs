@@ -37,6 +37,7 @@ namespace TaskManager.Controllers
         public string testc()
         {
             return "Hello world";
+            
         }
 
         [HttpPost("webhook")]
@@ -47,19 +48,55 @@ namespace TaskManager.Controllers
                 string value = reader.ReadToEndAsync().Result;
                 TelUpdate update = JsonConvert.DeserializeObject<TelUpdate>(value);
 
-                var keyboard = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup
+                
+                if(update.message != null)
                 {
-                    Keyboard = new[] {
+                    var xxx = new KeyboardButton();
+                    
+                    var MainKeyboard = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup
+                    {
+                        Keyboard = new[] {
                         new[] // row 1
                         {
-                            new KeyboardButton("Первая кнопко"),
-                            new KeyboardButton("Вторая кнопко"),
+                            new KeyboardButton("Назначить"),
+                        },
+                        new[] // row 2
+                        {
+                            new KeyboardButton("Назначенное"),
+                        },
+                        new[] // row 3
+                        {
+                            new KeyboardButton("Архив"),
                         },
                     },
-                    ResizeKeyboard = true
-                };
+                        ResizeKeyboard = true
+                    };
 
-                client.SendTextMessageAsync(update.message.chat.id, $"xxxxxxxxxxxxx", replyMarkup: keyboard);
+                    List<InlineKeyboardButton> row = new List<InlineKeyboardButton>();
+                    row.Add(new InlineKeyboardButton() { 
+                        Text="Misha"
+                    });
+                    row.Add(new InlineKeyboardButton()
+                    {
+                        Text = "Rost"
+                    });
+                    row.Add(new InlineKeyboardButton()
+                    {
+                        Text = "Vasya"
+                    });
+
+                    var k2 = new Telegram.Bot.Types.ReplyMarkups.InlineKeyboardMarkup(row);
+
+                    client.SendTextMessageAsync(update.message.chat.id, update.message.text, replyMarkup: MainKeyboard);
+
+                    client.SendTextMessageAsync(update.message.chat.id, "Выбирите кому Вы хотите назначить задачу:", replyMarkup: k2);
+
+                }
+                if (update.callback_query != null)
+                {
+
+                }
+
 
             }
 
