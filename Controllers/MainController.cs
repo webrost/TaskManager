@@ -8,6 +8,8 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Microsoft.Extensions.Options;
+
 
 namespace TaskManager.Controllers
 {
@@ -15,6 +17,15 @@ namespace TaskManager.Controllers
     [ApiController]
     public class MainController : ControllerBase
     {
+
+        private static TelegramBotClient client;
+
+        public MainController(IOptions<Models.BotConfig> config)
+        {
+            string token = config.Value.TelegramBotTocken;
+            client = new TelegramBotClient(token);
+        }
+
         /// <summary>
         /// test
         /// </summary>
