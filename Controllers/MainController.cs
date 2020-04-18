@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TaskManager.Models;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TaskManager.Controllers
 {
@@ -45,8 +46,21 @@ namespace TaskManager.Controllers
             {
                 string value = reader.ReadToEndAsync().Result;
                 TelUpdate update = JsonConvert.DeserializeObject<TelUpdate>(value);
-                
-                client.SendTextMessageAsync(update.message.chat.id, $"xxxxxxxxxxxxx");
+
+                var keyboard = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup
+                {
+                    Keyboard = new[] {
+                        new[] // row 1
+                        {
+                            new KeyboardButton("Первая кнопко"),
+                            new KeyboardButton("Вторая кнопко"),
+                        },
+                    },
+                    ResizeKeyboard = true
+                };
+
+                client.SendTextMessageAsync(update.message.chat.id, $"xxxxxxxxxxxxx", replyMarkup: keyboard);
+
             }
 
             //if (update == null) return;
