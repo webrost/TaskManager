@@ -30,7 +30,7 @@ namespace TaskManager
             services.Configure<TaskManager.Models.BotConfig>(Configuration.GetSection("BotConfig"));
             var client = new TelegramBotClient(Configuration.GetSection("BotConfig").GetValue<string>("TelegramBotTocken"));
             var hookUrl = Configuration.GetSection("BotConfig").GetValue<string>("TelegramBotWebHookAddress");
-            client.SetWebhookAsync(hookUrl + "/api/bot/message").Wait();
+            client.SetWebhookAsync(hookUrl + "/api/webhook").Wait();
 
             services.AddRazorPages();
         }
