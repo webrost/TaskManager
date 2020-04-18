@@ -11,6 +11,10 @@ namespace TaskManager.Controllers
     [ApiController]
     public class MainController : ControllerBase
     {
+        /// <summary>
+        /// test
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("test")]
         public string testc()
         {
