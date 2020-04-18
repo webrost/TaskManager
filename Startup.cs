@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Telegram.Bot;
+using Telegram.Bot.Args;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace TaskManager
 {
@@ -23,6 +27,11 @@ namespace TaskManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<TaskManager.Models.BotConfig>(Configuration.GetSection("BotConfig"));
+            var client = new TelegramBotClient(Configuration.GetSection("BotConfig").GetValue<string>("TelegramBotTocken"));
+            var hookUrl = Configuration.GetSection("BotConfig").GetValue<string>("TelegramBotWebHookAddress");
+            client.SetWebhookAsync(hookUrl + "/api/bot/message").Wait();
+
             services.AddRazorPages();
         }
 
@@ -46,6 +55,10 @@ namespace TaskManager
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoint => {
+                endpoint.MapControllers();
+            });
 
             app.UseEndpoints(endpoints =>
             {
