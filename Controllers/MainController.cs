@@ -33,7 +33,7 @@ namespace TaskManager.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("test")]
-        public string testc()
+        public string test()
         {
             return "Hello world";
         }
@@ -46,7 +46,10 @@ namespace TaskManager.Controllers
                 string value = reader.ReadToEndAsync().Result;
                 TelUpdate update = JsonConvert.DeserializeObject<TelUpdate>(value);
                 
-                client.SendTextMessageAsync(update.message.chat.id, $"xxxxxxxxxxxxx");
+                client.SendTextMessageAsync(update.message.chat.id, update.message.text);
+                
+                var button = new 
+
             }
 
             //if (update == null) return;
