@@ -34,9 +34,10 @@ namespace TaskManager.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("test")]
-        public string testc()
+        public List<Models.User> testc()
         {
-            return "Hello world";
+            Logic.TaskHelper t = new Logic.TaskHelper();
+            return t.getUsers();           
         }
 
         [HttpPost("webhook")]
@@ -47,6 +48,8 @@ namespace TaskManager.Controllers
                 string value = reader.ReadToEndAsync().Result;
                 TelUpdate update = JsonConvert.DeserializeObject<TelUpdate>(value);
 
+                var btn1 = new KeyboardButton("xxx");
+
                 var keyboard = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup
                 {
                     Keyboard = new[] {
@@ -56,8 +59,14 @@ namespace TaskManager.Controllers
                             new KeyboardButton("Вторая кнопко"),
                         },
                     },
-                    ResizeKeyboard = true
+                    ResizeKeyboard = true                    
                 };
+
+                var k2 = new Telegram.Bot.Types.ReplyMarkups.InlineKeyboardMarkup(new InlineKeyboardButton() { 
+                Text = "Inline Button",
+                Url = "https://google.com"
+     
+                });
 
                 client.SendTextMessageAsync(update.message.chat.id, $"xxxxxxxxxxxxx", replyMarkup: keyboard);
 
