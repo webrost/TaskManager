@@ -39,7 +39,7 @@ namespace TaskManager.Controllers
         [HttpPost("webhook")]
         public void WebHook()
         {
-            Update update = new Update();
+            //Update update = new Update();
             using (var reader = new System.IO.StreamReader(ControllerContext.HttpContext.Request.Body, System.Text.Encoding.UTF8))
             {
                 string value = reader.ReadToEndAsync().Result;
