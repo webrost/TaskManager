@@ -9,7 +9,9 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Microsoft.Extensions.Options;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
@@ -39,11 +41,12 @@ namespace TaskManager.Controllers
         [HttpPost("webhook")]
         public void WebHook()
         {
-            Update update = new Update();
             using (var reader = new System.IO.StreamReader(ControllerContext.HttpContext.Request.Body, System.Text.Encoding.UTF8))
             {
                 string value = reader.ReadToEndAsync().Result;
-                //update = Update.FromString(value);
+                TelUpdate update = JsonConvert.DeserializeObject<TelUpdate>(value);
+                
+                client.SendTextMessageAsync(update.message.chat.id, $"xxxxxxxxxxxxx");
             }
 
             //if (update == null) return;
