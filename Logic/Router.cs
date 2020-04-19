@@ -14,20 +14,20 @@ namespace TaskManager.Logic
             ///---Keyboard Commands
             if(message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
             {
-                switch (cm.GetCommand(message.Text))
+                string command = cm.GetCommand(message.Text);
+                switch (command)
                 {
                     case "SubordinateTasks":
-                        client.SendTextMessageAsync(message.Chat.Id, $"SubordinateTasks", replyMarkup: Screen.GetUsersInline(message));
+                        //client.SendTextMessageAsync(message.Chat.Id, $"SubordinateTasks", replyMarkup: Screen.GetUsersInline(message));
                         break;
                     case "StartCreateTask":
-
+                        client.SendTextMessageAsync(message.Chat.Id, $"Выберите, кому хотите назначить задачу", replyMarkup: Screen.GetUsersInline(message));
                         break;
-                    case "EndCreateTask":
-
+                    case "EndCreateTask": 
                         break;
                     default:
                         UserManager.CreateNewUser(message.From);
-                        client.SendTextMessageAsync(message.Chat.Id, $"****", replyMarkup: Screen.GetInitial(message));
+                        client.SendTextMessageAsync(message.Chat.Id, $"Чтобы добавить или просмотреть задачи, нажмите на соответствующие кнопки ниже", replyMarkup: Screen.GetInitial(message));
                         break;
                 }
             }            
@@ -44,6 +44,10 @@ namespace TaskManager.Logic
             {
                 case "GetUserTask":
                     client.SendTextMessageAsync(inline.Message.Chat.Id, $"****", replyMarkup: Screen.GetUserTask(p.First(x=>x.Key == "userid").Value));
+                    break;
+                case "StartFormTask":
+                    client.SendTextMessageAsync(inline.Message.Chat.Id, $"Опишите задачу и добавьте вложения (фото, видео, голосовые сообщения, геолокации и т.д.), если нужно. После завершения нажмите кнопку \"Готово\"", 
+                        replyMarkup: Screen.GetReadyButton());
                     break;
             }
         }
