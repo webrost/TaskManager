@@ -34,10 +34,10 @@ namespace TaskManager.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("test")]
-        public string testc()
+        public List<Models.User> testc()
         {
-            return "Hello world";
-            
+            List<Models.User> m = new List<Models.User>();
+            return m;           
         }
 
         [HttpPost("webhook")]
@@ -46,66 +46,11 @@ namespace TaskManager.Controllers
             using (var reader = new System.IO.StreamReader(ControllerContext.HttpContext.Request.Body, System.Text.Encoding.UTF8))
             {
                 string value = reader.ReadToEndAsync().Result;
-                TelUpdate update = JsonConvert.DeserializeObject<TelUpdate>(value);
+                Telegram.Bot.Types.Update update = JsonConvert.DeserializeObject<Telegram.Bot.Types.Update>(value);
 
-                
-                if(update.message != null)
-                {
-                    var xxx = new KeyboardButton();
-
-                    var MainKeyboard = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup();
-                    var taskHelper = new Logic.TaskHelper();
-                    List<Models.User> users = taskHelper.getUsers();
-
-                    List < List < KeyboardButton >> keyboard1 = new List<List<KeyboardButton>>();
-                    foreach(var user in users)
-                    {
-                        List<KeyboardButton> userrow = new List<KeyboardButton>();
-                        userrow.Add(new KeyboardButton(user.Name));
-                        keyboard1.Add(userrow);
-                    }
-
-                    MainKeyboard.Keyboard = keyboard1;
-                    MainKeyboard.ResizeKeyboard = true;
- 
-
-                    List<InlineKeyboardButton> row = new List<InlineKeyboardButton>();
-
-                    row.Add(new InlineKeyboardButton() { 
-                        Text="Misha"
-                    });
-                    row.Add(new InlineKeyboardButton()
-                    {
-                        Text = "Rost"
-                    });
-                    row.Add(new InlineKeyboardButton()
-                    {
-                        Text = "Vasya"
-                    });
-
-                    var k2 = new Telegram.Bot.Types.ReplyMarkups.InlineKeyboardMarkup(row);
-
-                    client.SendTextMessageAsync(update.message.chat.id, update.message.text, replyMarkup: MainKeyboard);
-
-                    client.SendTextMessageAsync(update.message.chat.id, "Выбирите кому Вы хотите назначить задачу:", replyMarkup: k2);
-
-                }
-                if (update.callback_query != null)
-                {
-
-                }
-
+                client.SendTextMessageAsync(update.Message.Chat.Id, $"xxxxxxxxxxxxx", replyMarkup: keyboard);
 
             }
-
-            //if (update == null) return;
-            //var message = update.Message;
-
-
-            //if (message?.Type == MessageType.ContactMessage)
-            //{
-
-            //}
         }
 
     }
