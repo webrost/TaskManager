@@ -52,27 +52,25 @@ namespace TaskManager.Controllers
                 if(update.message != null)
                 {
                     var xxx = new KeyboardButton();
-                    
-                    var MainKeyboard = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup
+
+                    var MainKeyboard = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup();
+                    var taskHelper = new Logic.TaskHelper();
+                    List<Models.User> users = taskHelper.getUsers();
+
+                    List < List < KeyboardButton >> keyboard1 = new List<List<KeyboardButton>>();
+                    foreach(var user in users)
                     {
-                        Keyboard = new[] {
-                        new[] // row 1
-                        {
-                            new KeyboardButton("Назначить"),
-                        },
-                        new[] // row 2
-                        {
-                            new KeyboardButton("Назначенное"),
-                        },
-                        new[] // row 3
-                        {
-                            new KeyboardButton("Архив"),
-                        },
-                    },
-                        ResizeKeyboard = true
-                    };
+                        List<KeyboardButton> userrow = new List<KeyboardButton>();
+                        userrow.Add(new KeyboardButton(user.Name));
+                        keyboard1.Add(userrow);
+                    }
+
+                    MainKeyboard.Keyboard = keyboard1;
+                    MainKeyboard.ResizeKeyboard = true;
+ 
 
                     List<InlineKeyboardButton> row = new List<InlineKeyboardButton>();
+
                     row.Add(new InlineKeyboardButton() { 
                         Text="Misha"
                     });
