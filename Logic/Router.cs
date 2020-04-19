@@ -7,21 +7,32 @@ namespace TaskManager.Logic
 {
     public class Router
     {
-        public static void RunCommand(Telegram.Bot.Types.Message message)
+        public static void RunCommand(Telegram.Bot.Types.Message message, Telegram.Bot.TelegramBotClient client)
         {
             Logic.CommandManager cm = new CommandManager();
-            switch(cm.GetCommand(message.Text))
+            if(message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
             {
-                case "SubordinateTasks":
-                    break;
-                case "StartCreateTask":
-                    break;
-                case "EndCreateTask":
-                    break;
-                default:
-                    Console.Write("Default action");
-                    break;
+                switch (cm.GetCommand(message.Text))
+                {
+                    case "SubordinateTasks":
+
+                        break;
+                    case "StartCreateTask":
+
+                        break;
+                    case "EndCreateTask":
+
+                        break;
+                    default:
+                        UserManager.CreateNewUser(message.From);
+                        //client.SendTextMessageAsync(message.Chat.Id, $"xxxxxxxxxxxxx", replyMarkup: Screen.GetUsers(message));
+                        client.SendTextMessageAsync(message.Chat.Id, $"xxxxxxxxxxxxx", replyMarkup: Screen.GetInitial(message));
+
+                        Console.Write("Default action");
+                        break;
+                }
             }
+            
         }
     }
 }

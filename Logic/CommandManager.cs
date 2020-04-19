@@ -13,7 +13,7 @@ namespace TaskManager.Logic
         public CommandManager() {
             dictionary.Add(new KeyValuePair<string, string>("SubordinateTasks","Назначенные задачи"));
             dictionary.Add(new KeyValuePair<string, string>("StartCreateTask", "Начать формулировку задачи"));
-            dictionary.Add(new KeyValuePair<string, string>("EndCreateTask", "Начать формулировку задачи"));
+            dictionary.Add(new KeyValuePair<string, string>("EndCreateTask", "Закончить формулировку задачи"));
         }
 
         public string GetCommand(string text)

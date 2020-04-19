@@ -15,7 +15,8 @@ namespace TaskManager.Logic
                     model.Add(new Models.User() {
                         Name = $"{from.FirstName} {from.LastName}",
                         TelegramId = from.Id                        
-                    }); ;
+                    });
+                    model.SaveChanges();
                 }
             }
         }
