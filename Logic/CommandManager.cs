@@ -11,9 +11,10 @@ namespace TaskManager.Logic
         List<KeyValuePair<string, string>> dictionary = new List<KeyValuePair<string, string>>();
 
         public CommandManager() {
-            dictionary.Add(new KeyValuePair<string, string>("SubordinateTasks","Назначенные задачи"));
-            dictionary.Add(new KeyValuePair<string, string>("StartCreateTask", "Начать формулировку задачи"));
-            dictionary.Add(new KeyValuePair<string, string>("EndCreateTask", "Закончить формулировку задачи"));
+            dictionary.Add(new KeyValuePair<string, string>("SubordinateTasks", @"Назначенные задачи  📋"));
+            dictionary.Add(new KeyValuePair<string, string>("StartCreateTask", "Назначить задачу   ✒"));
+            dictionary.Add(new KeyValuePair<string, string>("EndCreateTask", "Готово"));
+            //dictionary.Add(new KeyValuePair<string, string>("ShowArchive", "Архив   📁"));
         }
 
         public string GetCommand(string text)

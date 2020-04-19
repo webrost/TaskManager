@@ -42,7 +42,7 @@ namespace TaskManager.Logic
                 row.Add(new InlineKeyboardButton()
                 {
                     Text = user.Name,
-                    CallbackData = "GetUserTask?userid=" + user.Id
+                    CallbackData = "StartFormTask?userid=" + user.Id
                 });
                 keyboard.Add(row);
             }
@@ -57,32 +57,50 @@ namespace TaskManager.Logic
         /// <returns></returns>
         public static Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup GetInitial(Message message)
         {
+            Logic.CommandManager cm = new CommandManager();
             ReplyKeyboardMarkup ret = new ReplyKeyboardMarkup();
             List<List<KeyboardButton>> keyboard = new List<List<KeyboardButton>>();
             ret.ResizeKeyboard = true;
 
             var row1 = new List<KeyboardButton>();
             var row2 = new List<KeyboardButton>();
-            var row3 = new List<KeyboardButton>();
+            //var row3 = new List<KeyboardButton>();
             row1.Add(new KeyboardButton()
             {
-                Text = @"Назначить задачу   ✒" /*+ ('').ToString()*/
+                Text = cm.GetText("StartCreateTask")
             }) ;
             row2.Add(new KeyboardButton()
             {
-                Text = "Назначенные задачи  📋"
+                Text = cm.GetText("SubordinateTasks")
             }); ;
-            row3.Add(new KeyboardButton()
-            {
-                Text = "Архив   📁"
-            }); ;
+            //row3.Add(new KeyboardButton()
+            //{
+            //    Text = cm.GetText("ShowArchive")
+            //}); ;
             keyboard.Add(row1);
             keyboard.Add(row2);
-            keyboard.Add(row3);
+            //keyboard.Add(row3);
             ret.Keyboard = keyboard;
             return ret;
         }
 
+
+        public static Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup GetReadyButton()
+        {
+            Logic.CommandManager cm = new CommandManager();
+            ReplyKeyboardMarkup ret = new ReplyKeyboardMarkup();
+            List<List<KeyboardButton>> keyboard = new List<List<KeyboardButton>>();
+            ret.ResizeKeyboard = true;
+
+            var row1 = new List<KeyboardButton>();
+            row1.Add(new KeyboardButton()
+            {
+                Text = cm.GetText("EndCreateTask")
+            });
+            keyboard.Add(row1);
+            ret.Keyboard = keyboard;
+            return ret;
+        }
         /// <summary>
         /// Return user tasks
         /// </summary>
