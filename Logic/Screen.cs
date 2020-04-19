@@ -66,15 +66,15 @@ namespace TaskManager.Logic
             var row3 = new List<KeyboardButton>();
             row1.Add(new KeyboardButton()
             {
-                Text = @"Назначить задачу" + ('\uF589').ToString()
+                Text = @"Назначить задачу   ✒" /*+ ('').ToString()*/
             }) ;
             row2.Add(new KeyboardButton()
             {
-                Text = "Назначиные задачи"
+                Text = "Назначенные задачи  📋"
             }); ;
             row3.Add(new KeyboardButton()
             {
-                Text = "Архив"
+                Text = "Архив   📁"
             }); ;
             keyboard.Add(row1);
             keyboard.Add(row2);
