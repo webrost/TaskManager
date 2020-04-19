@@ -16,7 +16,9 @@ namespace TaskManager.Models
         }
 
         public virtual DbSet<Company> Company { get; set; }
+        public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Task> Task { get; set; }
         public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -26,6 +28,7 @@ namespace TaskManager.Models
                 optionsBuilder.UseSqlServer("Data Source=192.168.1.131;Initial Catalog=T;User ID=sa;Password=saP@ssw0rd;Encrypt=False;TrustServerCertificate=True");
             }
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Company>(entity =>
@@ -37,11 +40,67 @@ namespace TaskManager.Models
                 entity.Property(e => e.Name).HasMaxLength(1024);
             });
 
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Data)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
+
+                entity.Property(e => e.DeletedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.FinishTime).HasColumnType("date");
+
+                entity.Property(e => e.Text).HasColumnType("text");
+
+                entity.HasOne(d => d.Created)
+                    .WithMany(p => p.Message)
+                    .HasForeignKey(d => d.CreatedId)
+                    .HasConstraintName("FK_Created");
+
+                entity.HasOne(d => d.Task)
+                    .WithMany(p => p.Message)
+                    .HasForeignKey(d => d.TaskId)
+                    .HasConstraintName("FK_Task");
+            });
+
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Task>(entity =>
+            {
+                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.DeleteTime).HasColumnType("datetime");
+
+                entity.Property(e => e.FinishTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(4000);
+
+                entity.Property(e => e.StartTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Status).HasMaxLength(255);
+
+                entity.Property(e => e.TechStatus).HasMaxLength(255);
+
+                entity.Property(e => e.TechStatusChanged).HasColumnType("datetime");
+
+                entity.Property(e => e.TelegramFrom).HasMaxLength(1024);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.TaskCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .HasConstraintName("FK_Boss");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.TaskUser)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Subordinate");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -63,6 +122,7 @@ namespace TaskManager.Models
 
             OnModelCreatingPartial(modelBuilder);
         }
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

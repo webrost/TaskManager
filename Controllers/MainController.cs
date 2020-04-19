@@ -36,8 +36,8 @@ namespace TaskManager.Controllers
         [HttpGet("test")]
         public List<Models.User> testc()
         {
-            Logic.TaskHelper t = new Logic.TaskHelper();
-            return t.getUsers();           
+            List<Models.User> m = new List<Models.User>();
+            return m;           
         }
 
         [HttpPost("webhook")]
@@ -46,40 +46,11 @@ namespace TaskManager.Controllers
             using (var reader = new System.IO.StreamReader(ControllerContext.HttpContext.Request.Body, System.Text.Encoding.UTF8))
             {
                 string value = reader.ReadToEndAsync().Result;
-                TelUpdate update = JsonConvert.DeserializeObject<TelUpdate>(value);
+                Telegram.Bot.Types.Update update = JsonConvert.DeserializeObject<Telegram.Bot.Types.Update>(value);
 
-                var btn1 = new KeyboardButton("xxx");
-
-                var keyboard = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup
-                {
-                    Keyboard = new[] {
-                        new[] // row 1
-                        {
-                            new KeyboardButton("Первая кнопко"),
-                            new KeyboardButton("Вторая кнопко"),
-                        },
-                    },
-                    ResizeKeyboard = true                    
-                };
-
-                var k2 = new Telegram.Bot.Types.ReplyMarkups.InlineKeyboardMarkup(new InlineKeyboardButton() { 
-                Text = "Inline Button",
-                Url = "https://google.com"
-     
-                });
-
-                client.SendTextMessageAsync(update.message.chat.id, $"xxxxxxxxxxxxx", replyMarkup: keyboard);
+                client.SendTextMessageAsync(update.Message.Chat.Id, $"xxxxxxxxxxxxx", replyMarkup: keyboard);
 
             }
-
-            //if (update == null) return;
-            //var message = update.Message;
-
-
-            //if (message?.Type == MessageType.ContactMessage)
-            //{
-
-            //}
         }
 
     }
