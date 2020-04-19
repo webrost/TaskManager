@@ -34,7 +34,7 @@ namespace TaskManager.Logic
         public static List<Models.User> getMyUsers(Telegram.Bot.Types.Message message)
         {
             List<Models.User> ret = new List<Models.User>();
-            using (TaskManager.Models.TContext model = new Models.TContext())
+            using (Models.TContext model = new Models.TContext())
             {
                 if(model.User.Count(x=>x.TelegramId == message.From.Id) > 0)
                 {
@@ -52,9 +52,22 @@ namespace TaskManager.Logic
         {
             List<Models.Task> ret = new List<Models.Task>();
             int userId = int.Parse(userid);
-            using (TaskManager.Models.TContext model = new Models.TContext())
+            using (Models.TContext model = new Models.TContext())
             {
                 ret = model.Task.Where(x => x.UserId == userId).ToList();
+            }
+            return ret;
+        }
+
+        public static int GetUserId(int telegramId)
+        {
+            int ret = -1;
+            using (Models.TContext model = new Models.TContext())
+            {
+                if (model.User.Count(x => x.TelegramId == telegramId) > 0)
+                {
+                    ret = model.User.First(x => x.TelegramId == telegramId).Id;
+                }
             }
             return ret;
         }

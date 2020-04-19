@@ -16,6 +16,7 @@ namespace TaskManager.Models
         }
 
         public virtual DbSet<Company> Company { get; set; }
+        public virtual DbSet<Files> Files { get; set; }
         public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Task> Task { get; set; }
@@ -41,19 +42,39 @@ namespace TaskManager.Models
                 entity.Property(e => e.Name).HasMaxLength(1024);
             });
 
+            modelBuilder.Entity<Files>(entity =>
+            {
+                entity.HasIndex(e => e.Id)
+                    .HasName("KEY_Company_Id")
+                    .IsUnique();
+
+                entity.Property(e => e.FileId).HasMaxLength(1024);
+
+                entity.Property(e => e.FileName).HasMaxLength(1024);
+
+                entity.Property(e => e.FileUniqueId).HasMaxLength(1024);
+
+                entity.Property(e => e.MimeType).HasMaxLength(1024);
+
+                entity.Property(e => e.Type).HasMaxLength(1024);
+
+                entity.HasOne(d => d.Message)
+                    .WithMany(p => p.Files)
+                    .HasForeignKey(d => d.MessageId)
+                    .HasConstraintName("FK_Message");
+            });
+
             modelBuilder.Entity<Message>(entity =>
             {
                 entity.Property(e => e.CreatedTime).HasColumnType("datetime");
-
-                entity.Property(e => e.Data)
-                    .HasMaxLength(1)
-                    .IsFixedLength();
 
                 entity.Property(e => e.DeletedTime).HasColumnType("datetime");
 
                 entity.Property(e => e.FinishTime).HasColumnType("date");
 
                 entity.Property(e => e.Text).HasColumnType("text");
+
+                entity.Property(e => e.Type).HasMaxLength(255);
 
                 entity.HasOne(d => d.Created)
                     .WithMany(p => p.Message)
