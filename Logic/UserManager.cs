@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace TaskManager.Logic
                 {
                     model.Add(new Models.User() {
                         Name = $"{from.FirstName} {from.LastName}",
+                        CreatedTime = DateTime.Now,
                         TelegramId = from.Id                        
                     });
                     model.SaveChanges();
@@ -42,6 +44,17 @@ namespace TaskManager.Logic
                         ret = model.User.Where(x=>x.CompanyId == me.CompanyId).ToList();
                     }
                 }                
+            }
+            return ret;
+        }
+
+        public static List<Models.Task> getUserTask(string userid)
+        {
+            List<Models.Task> ret = new List<Models.Task>();
+            int userId = int.Parse(userid);
+            using (TaskManager.Models.TContext model = new Models.TContext())
+            {
+                ret = model.Task.Where(x => x.UserId == userId).ToList();
             }
             return ret;
         }

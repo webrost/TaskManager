@@ -25,6 +25,7 @@ namespace TaskManager.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Data Source=192.168.1.131;Initial Catalog=T;User ID=sa;Password=saP@ssw0rd;Encrypt=False;TrustServerCertificate=True");
             }
         }
@@ -105,6 +106,10 @@ namespace TaskManager.Models
 
             modelBuilder.Entity<User>(entity =>
             {
+                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.LockedTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Name).HasMaxLength(1024);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(1024);

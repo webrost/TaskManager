@@ -54,7 +54,7 @@ namespace TaskManager.Controllers
                         Logic.Router.RunCommand(update.Message, client);
                         break;
                     case Telegram.Bot.Types.Enums.UpdateType.CallbackQuery:
-
+                        Logic.Router.RunInlineCommand(update.CallbackQuery,client);
                         break;
                 }
                                 

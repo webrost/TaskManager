@@ -26,6 +26,11 @@ namespace TaskManager.Logic
             return ret;
         }
 
+        /// <summary>
+        /// Return user list with tasks
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public static Telegram.Bot.Types.ReplyMarkups.InlineKeyboardMarkup GetUsersInline(Message message)
         {
             List<List<InlineKeyboardButton>> keyboard = new List<List<InlineKeyboardButton>>();
@@ -37,11 +42,10 @@ namespace TaskManager.Logic
                 row.Add(new InlineKeyboardButton()
                 {
                     Text = user.Name,
-                    CallbackData = "GetUser" + user.Id
+                    CallbackData = "GetUserTask?userid=" + user.Id
                 });
                 keyboard.Add(row);
             }
-
             InlineKeyboardMarkup ret = new InlineKeyboardMarkup(keyboard);
             return ret;
         }
@@ -76,6 +80,30 @@ namespace TaskManager.Logic
             keyboard.Add(row2);
             keyboard.Add(row3);
             ret.Keyboard = keyboard;
+            return ret;
+        }
+
+        /// <summary>
+        /// Return user tasks
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public static Telegram.Bot.Types.ReplyMarkups.InlineKeyboardMarkup GetUserTask(string userid)
+        {
+            List<List<InlineKeyboardButton>> keyboard = new List<List<InlineKeyboardButton>>();
+
+
+            foreach (var task in UserManager.getUserTask(userid))
+            {
+                var row = new List<InlineKeyboardButton>();
+                row.Add(new InlineKeyboardButton()
+                {
+                    Text = task.Name,
+                    CallbackData = "xxxx?userid="
+                });
+                keyboard.Add(row);
+            }
+            InlineKeyboardMarkup ret = new InlineKeyboardMarkup(keyboard);
             return ret;
         }
     }

@@ -25,5 +25,19 @@ namespace TaskManager.Logic
         {
             return dictionary.FirstOrDefault(x => x.Key == command).Value;
         }
+
+        public string GetInlineCommand(string data)
+        {
+            return data.Split('?').Length == 1 ? data : data.Split('?')[0];
+        }
+
+        public List<KeyValuePair<string,string>> GetInlineParameters(string data)
+        {
+            List<KeyValuePair<string, string>> ret = new List<KeyValuePair<string, string>>();
+            if (data.Split('?').Length > 1) {
+                ret = data.Split('?')[1].Split('&').Select(x => new KeyValuePair<string, string>(x.Split('=')[0], x.Split('=')[1])).ToList();
+            } 
+            return ret;
+        }
     }
 }

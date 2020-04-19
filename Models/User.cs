@@ -18,6 +18,8 @@ namespace TaskManager.Models
         public string PhoneNumber { get; set; }
         public int? RoleId { get; set; }
         public int? TelegramId { get; set; }
+        public DateTime? CreatedTime { get; set; }
+        public DateTime? LockedTime { get; set; }
 
         public virtual Company Company { get; set; }
         public virtual Role Role { get; set; }
