@@ -16,6 +16,7 @@ namespace TaskManager.Models
         public int? Width { get; set; }
         public string Type { get; set; }
         public int? MessageId { get; set; }
+        public string Data { get; set; }
 
         public virtual Message Message { get; set; }
     }

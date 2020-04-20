@@ -59,7 +59,7 @@ namespace TaskManager.Logic
             return ret;
         }
 
-        public static int GetUserId(int telegramId)
+        public static int GetUserId(long telegramId)
         {
             int ret = -1;
             using (Models.TContext model = new Models.TContext())

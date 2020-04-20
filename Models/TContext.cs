@@ -48,6 +48,8 @@ namespace TaskManager.Models
                     .HasName("KEY_Company_Id")
                     .IsUnique();
 
+                entity.Property(e => e.Data).HasColumnType("text");
+
                 entity.Property(e => e.FileId).HasMaxLength(1024);
 
                 entity.Property(e => e.FileName).HasMaxLength(1024);

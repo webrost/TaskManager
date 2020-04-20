@@ -47,14 +47,14 @@ namespace TaskManager.Controllers
             {
                 string value = reader.ReadToEndAsync().Result;
                 Telegram.Bot.Types.Update update = JsonConvert.DeserializeObject<Telegram.Bot.Types.Update>(value);
-
+               
                 var x = update.Type;
                 switch (update.Type) {
                     case Telegram.Bot.Types.Enums.UpdateType.Message:
                         Logic.Router.RunCommand(update.Message, client);
                         break;
                     case Telegram.Bot.Types.Enums.UpdateType.CallbackQuery:
-                        Logic.Router.RunInlineCommand(update.CallbackQuery,client);
+                        Logic.Router.RunInlineCommand(update.CallbackQuery,client, update.CallbackQuery);
                         break;
                 }
                                 

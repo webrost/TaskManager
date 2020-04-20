@@ -1,24 +1,29 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Server.HttpSys;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using TaskManager.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace TaskManager.Logic
 {
     public class TaskManager
     {
-        public static int OpenNewTaskForEdit(Telegram.Bot.Types.Message message, int telegramUserId)
+        public static int OpenNewTaskForEdit(Telegram.Bot.Types.Message message, int userId)
         {
+            CloseOpenedEditTasks(message);
             using (Models.TContext model = new Models.TContext())
             {
                 var task = new Models.Task()
                 {
                     Name = "",
                     CreatedTime = DateTime.Now,
-                    CreatedBy = UserManager.GetUserId(message.From.Id),
-                    UserId = UserManager.GetUserId(telegramUserId),
-                    TechStatus = TechStatusEnum.InEdit.ToString()
+                    CreatedBy = UserManager.GetUserId(message.Chat.Id),
+                    UserId = userId,
+                    TechStatus = TechStatusEnum.InEdit.ToString(),                    
                 };
                 model.Task.Add(task);
                 model.SaveChanges();
@@ -45,7 +50,7 @@ namespace TaskManager.Logic
         {
             using (Models.TContext model = new Models.TContext())
             {
-                foreach(var task in model.Task.Where(x=>x.CreatedBy == message.From.Id
+                foreach(var task in model.Task.Where(x=>x.CreatedBy == UserManager.GetUserId(message.From.Id)
                 && x.TechStatus == Models.TechStatusEnum.InEdit.ToString()))
                 {
                     task.TechStatus = Models.TechStatusEnum.CompleteEdit.ToString();
@@ -54,7 +59,7 @@ namespace TaskManager.Logic
             }
         }
 
-        public static int AddMessage(Telegram.Bot.Types.Message message)
+        public static int AddMessage(Telegram.Bot.Types.Message message, Telegram.Bot.TelegramBotClient client)
         {
             int ret = 1;
             int taskId = GetOpenedEditTaskId(message);
@@ -64,11 +69,13 @@ namespace TaskManager.Logic
                 m.TelegramChatId = message.Chat.Id;
                 m.TelegramMessageId = message.MessageId;
                 m.TaskId = taskId;
-                m.CreatedId = message.From.Id;
+                m.CreatedId = UserManager.GetUserId(message.From.Id);
                 m.CreatedTime = DateTime.Now;
+                m.Type = message.Type.ToString();
                 model.Message.Add(m);
                 model.SaveChanges();
 
+                Telegram.Bot.Types.File f = new Telegram.Bot.Types.File();
                 switch (message.Type)
                 {
                     case Telegram.Bot.Types.Enums.MessageType.Text:
@@ -81,9 +88,11 @@ namespace TaskManager.Logic
                         file.MessageId = m.Id;
                         file.FileName = message.Document.FileName;
                         file.FileId = message.Document.FileId;
-                        file.FileSize = message.Document.FileSize;
+                        file.FileSize = message.Document.FileSize;                        
+                        f = client.GetFileAsync(file.FileId).Result;
+                        file.Data = GetFileString(f);
                         file.FileUniqueId = message.Document.FileUniqueId;
-                        file.MimeType = message.Document.MimeType;
+                        file.MimeType = message.Document.MimeType;                        
                         file.Type = Telegram.Bot.Types.Enums.MessageType.Document.ToString();
                         model.Files.Add(file);
                         model.SaveChanges();
@@ -99,6 +108,8 @@ namespace TaskManager.Logic
                         video.Width = message.Video.Width;
                         video.Height = message.Video.Height;
                         video.Type = Telegram.Bot.Types.Enums.MessageType.Video.ToString();
+                        f = client.GetFileAsync(video.FileId).Result;
+                        video.Data = GetFileString(f);
                         model.Files.Add(video);
                         model.SaveChanges();
                         break;
@@ -111,6 +122,8 @@ namespace TaskManager.Logic
                         videoNote.Duration = message.VideoNote.Duration;
                         videoNote.Type = Telegram.Bot.Types.Enums.MessageType.VideoNote.ToString();
                         model.Files.Add(videoNote);
+                        f = client.GetFileAsync(videoNote.FileId).Result;
+                        videoNote.Data = GetFileString(f);
                         model.SaveChanges();
                         break;
                     case Telegram.Bot.Types.Enums.MessageType.Voice:
@@ -123,6 +136,8 @@ namespace TaskManager.Logic
                         voice.MimeType = message.Voice.MimeType;
                         voice.Type = Telegram.Bot.Types.Enums.MessageType.Voice.ToString();
                         model.Files.Add(voice);
+                        f = client.GetFileAsync(voice.FileId).Result;
+                        voice.Data = GetFileString(f);
                         model.SaveChanges();
                         break;
                     case Telegram.Bot.Types.Enums.MessageType.Photo:
@@ -136,6 +151,8 @@ namespace TaskManager.Logic
                             p.Width = photo.Width;
                             p.Height = photo.Height;
                             p.Type = Telegram.Bot.Types.Enums.MessageType.Photo.ToString();
+                            f = client.GetFileAsync(p.FileId).Result;
+                            p.Data = GetFileString(f);
                             model.Files.Add(p);
                             model.SaveChanges();
                         }
@@ -148,5 +165,32 @@ namespace TaskManager.Logic
             }
             return ret;
         }
-}
+
+        public static Models.TasksInfo GetTaskCount(int userId)
+        {
+            Models.TasksInfo ret = new TasksInfo();
+            using (Models.TContext model = new Models.TContext())
+            {
+                ret.CountAllTask = model.Task.Where(x => x.UserId == userId && x.DeleteTime == null).Count();
+                ret.OpenedTask = model.Task.Where(x => x.UserId == userId && x.DeleteTime == null
+                && x.FinishTime == null).Count();
+                ret.CompletedTask = ret.CountAllTask - ret.CompletedTask;
+            }
+            return ret;
+        }
+
+        static string GetFileString(Telegram.Bot.Types.File f)
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+            string token = config.GetSection("BotConfig").GetValue<string>("TelegramBotTocken");
+            string fileURL = $@"https://api.telegram.org/file/bot" + token + "/" + f.FilePath;
+            WebClient wc = new WebClient();
+            byte[] data = wc.DownloadData(fileURL);
+            string fileAsString = Convert.ToBase64String(data);
+            return fileAsString;
+        }
+
+    }
 }

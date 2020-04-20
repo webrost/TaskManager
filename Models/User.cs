@@ -17,7 +17,7 @@ namespace TaskManager.Models
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public int? RoleId { get; set; }
-        public int? TelegramId { get; set; }
+        public long? TelegramId { get; set; }
         public DateTime? CreatedTime { get; set; }
         public DateTime? LockedTime { get; set; }
 

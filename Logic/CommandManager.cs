@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ namespace TaskManager.Logic
         List<KeyValuePair<string, string>> dictionary = new List<KeyValuePair<string, string>>();
 
         public CommandManager() {
-            dictionary.Add(new KeyValuePair<string, string>("SubordinateTasks", @"Назначенные задачи  📋"));
-            dictionary.Add(new KeyValuePair<string, string>("StartCreateTask", "Назначить задачу   ✒"));
-            dictionary.Add(new KeyValuePair<string, string>("EndCreateTask", "Готово"));
+            dictionary.Add(new KeyValuePair<string, string>(Models.KeyboardCommandEnum.GetSubordinateTasks.ToString(), @"Назначенные задачи  📋"));
+            dictionary.Add(new KeyValuePair<string, string>(Models.KeyboardCommandEnum.SelectUserForTask.ToString(), "Назначить задачу   ✒"));
+            dictionary.Add(new KeyValuePair<string, string>(Models.KeyboardCommandEnum.EndCreateTask.ToString(), "Готово"));
             //dictionary.Add(new KeyValuePair<string, string>("ShowArchive", "Архив   📁"));
         }
 
