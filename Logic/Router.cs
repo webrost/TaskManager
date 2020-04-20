@@ -72,6 +72,14 @@ namespace TaskManager.Logic
 
                     ///------------------------------------------------------------------
                     case KeyboardCommandEnum.UnknownCommand:
+                    if (UserManager.GetUserId(message.From.Id) >= 0) {
+
+                    }
+                    else
+                    {
+                        
+                    }
+
                         if (TaskManager.GetOpenedEditTaskId(message) > 0) {
 
                             TaskManager.AddMessage(message, client);

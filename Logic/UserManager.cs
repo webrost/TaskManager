@@ -73,14 +73,28 @@ namespace TaskManager.Logic
             return ret;
         }
 
-        public static string CreateNewCompany(string name)
+        public static int GetCompanyId(string secretCode)
+        {
+            int ret = -1;
+            using (Models.TContext model = new Models.TContext())
+            {
+                if (model.Company.Count(x => x.SecretCode == secretCode) > 0)
+                {
+                    ret = model.Company.First(x => x.SecretCode == secretCode).Id;
+                }
+            }
+            return ret;
+        }
+
+        public static int CreateNewCompany(string name)
         {
             Random rnd = new Random();
+            Models.Company c = new Models.Company();
             string secretCode = "#"+rnd.Next(10000000, 99999999).ToString();
             using (Models.TContext model = new Models.TContext ()) {
                 if (model.Company.Count(x=>x.Name == name) == 0)
                 {
-                    Models.Company c = new Models.Company();
+                    
                     c.Name = name;
                     c.SecretCode = secretCode;
                     model.Add(c);
@@ -90,7 +104,7 @@ namespace TaskManager.Logic
                     secretCode = model.Company.First(x => x.Name == name).SecretCode;
                 }
             }
-            return secretCode;
+            return c.Id;
         }
 
         public static string JoinToCompany(string secretCode, int telegramUserId)
