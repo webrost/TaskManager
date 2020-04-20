@@ -166,6 +166,15 @@ namespace TaskManager.Logic
             return ret;
         }
 
+        public static List<Models.Message> GetMessages(int taskId)
+        {
+            List<Models.Message> ret = new List<Message>();
+            using (Models.TContext model = new TContext()) {
+                ret = model.Message.Where(x => x.TaskId == taskId).ToList();
+            }
+            return ret;
+        }
+
         public static Models.TasksInfo GetTaskCount(int userId)
         {
             Models.TasksInfo ret = new TasksInfo();
@@ -174,7 +183,7 @@ namespace TaskManager.Logic
                 ret.CountAllTask = model.Task.Where(x => x.UserId == userId && x.DeleteTime == null).Count();
                 ret.OpenedTask = model.Task.Where(x => x.UserId == userId && x.DeleteTime == null
                 && x.FinishTime == null).Count();
-                ret.CompletedTask = ret.CountAllTask - ret.CompletedTask;
+                ret.CompletedTask = ret.CountAllTask - ret.OpenedTask;
             }
             return ret;
         }
@@ -192,5 +201,6 @@ namespace TaskManager.Logic
             return fileAsString;
         }
 
+        
     }
 }

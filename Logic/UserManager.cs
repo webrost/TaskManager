@@ -71,5 +71,25 @@ namespace TaskManager.Logic
             }
             return ret;
         }
+
+        public static List<Models.Task> GetUserTasks(int userId)
+        {
+            List<Models.Task> ret = new List<Models.Task>();
+            using (Models.TContext model = new Models.TContext())
+            {
+                ret = model.Task.Where(x => x.UserId == userId).ToList();
+            }
+            return ret;
+        }
+
+        public static Models.User GetUser(int userId)
+        {
+            Models.User ret = new Models.User();
+            using (Models.TContext model = new Models.TContext())
+            {
+                ret = model.User.First(x => x.Id == userId);
+            }
+            return ret;
+        }
     }
 }

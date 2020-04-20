@@ -8,6 +8,8 @@ namespace TaskManager.Models
     public enum InlineCommandEnum
     {
         CreateTask,
-        ShowUserTasks
+        ShowUserTasks,
+        EditTask,
+        DeleteTask
     }
 }

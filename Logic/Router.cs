@@ -39,7 +39,7 @@ namespace TaskManager.Logic
                             }); ;
                         }
 
-                        Screen.SendInlineKeys($"Выберите, кому хотите назначить задачу",
+                        Screen.SendInlineKeys($"Выберите, человека, задачи которого Вы хотите просмотреть",
                             buttons, client, message.Chat);
                     break;
 
@@ -78,7 +78,7 @@ namespace TaskManager.Logic
 
                             commands.Clear();
                             commands.Add(Models.KeyboardCommandEnum.EndCreateTask);
-                            Screen.SendKeyboard($"Добавьте еще описания или нажмите кнопку \"Готово\"",
+                            Screen.SendKeyboard($"Добавьте еще описания или нажмите кнопку <i>Готово</i>",
                                 commands, client, message.Chat);
                         }
                         else
@@ -109,7 +109,40 @@ namespace TaskManager.Logic
             {
                 ///------------------------------------------------------------------
                 case InlineCommandEnum.ShowUserTasks:
-                    
+                    List<Telegram.Bot.Types.ReplyMarkups.InlineKeyboardButton> buttons = new List<Telegram.Bot.Types.ReplyMarkups.InlineKeyboardButton>();
+
+                    User a = UserManager.GetUser(int.Parse(p.First(x => x.Key == "userid").Value));
+                    Logic.Screen.SendText($"<b>Задачи у <i>{a.Name}</i></b>:", client, message.Message.Chat);
+                    foreach (var task in UserManager.GetUserTasks(int.Parse(p.First(x=>x.Key=="userid").Value)))
+                    {
+                        buttons.Clear();
+                        buttons.Add(new Telegram.Bot.Types.ReplyMarkups.InlineKeyboardButton()
+                        {
+                            Text = "Редактировавть",
+                            CallbackData = Models.InlineCommandEnum.EditTask.ToString() + "?taskid=" + task.Id
+                        });
+                        buttons.Add(new Telegram.Bot.Types.ReplyMarkups.InlineKeyboardButton()
+                        {
+                            Text = "Удалить",
+                            CallbackData = Models.InlineCommandEnum.DeleteTask.ToString() + "?taskid=" + task.Id
+                        });
+                        int i = 0;
+                        string outData = "";
+                        foreach (var mess in TaskManager.GetMessages(task.Id).Where(x=>x.Type == "Text"))
+                        {
+                            if(i==0)
+                            {
+                                outData += $"<b>{mess.Text}</b>";
+                            }
+                            else
+                            {
+                                outData += $"\n<i>· {mess.Text}</i>";
+                            }
+                            i++;
+                        }
+                        Logic.Screen.SendInlineKeysHorizontaly(outData, buttons, client, message.Message.Chat);
+                    }
+
                     break;
                 ///------------------------------------------------------------------
                 case InlineCommandEnum.CreateTask:
@@ -119,7 +152,7 @@ namespace TaskManager.Logic
                     commands.Clear();
                     commands.Add(Models.KeyboardCommandEnum.EndCreateTask);                    
 
-                    Screen.SendKeyboard($"Опишите задачу и добавьте вложения (фото, видео, голосовые сообщения, геолокации и т.д.), если нужно. После завершения нажмите кнопку \"Готово\"",
+                    Screen.SendKeyboard($"Опишите задачу и добавьте вложения (фото, видео, голосовые сообщения, геолокации и т.д.), если нужно. После завершения нажмите кнопку <i>Готово</i>. Первое текстовое сообщение будет заглавным.",
                         commands, client, message.Message.Chat);
                     break;
             }
