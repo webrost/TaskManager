@@ -40,6 +40,8 @@ namespace TaskManager.Models
                     .IsUnique();
 
                 entity.Property(e => e.Name).HasMaxLength(1024);
+
+                entity.Property(e => e.SecretCode).HasMaxLength(1024);
             });
 
             modelBuilder.Entity<Files>(entity =>
