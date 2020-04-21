@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -73,15 +74,8 @@ namespace TaskManager.Logic
                     ///------------------------------------------------------------------
                     case KeyboardCommandEnum.UnknownCommand:
                     if (UserManager.GetUserId(message.From.Id) >= 0) {
-
-                    }
-                    else
-                    {
-                        
-                    }
-
-                        if (TaskManager.GetOpenedEditTaskId(message) > 0) {
-
+                        if (TaskManager.GetOpenedEditTaskId(message) > 0)
+                        {
                             TaskManager.AddMessage(message, client);
 
                             commands.Clear();
@@ -89,15 +83,35 @@ namespace TaskManager.Logic
                             Screen.SendKeyboard($"Добавьте еще описания или нажмите кнопку <i>Готово</i>",
                                 commands, client, message.Chat);
                         }
-                        else
-                        {
-                            UserManager.CreateNewUser(message.From);
+                        else {
                             commands.Clear();
                             commands.Add(Models.KeyboardCommandEnum.GetSubordinateTasks);
                             commands.Add(Models.KeyboardCommandEnum.SelectUserForTask);
                             Screen.SendKeyboard($"Чтобы добавить или просмотреть задачи, нажмите на соответствующие кнопки ниже",
                                 commands, client, message.Chat);
                         }
+                    }
+                    else
+                    {
+                        if (message.Text.ToLower() == @"/start")
+                        {
+                            Screen.SendText($@"Введите название Своей Компании для регистрации или введите код приглашения.", client, message.Chat);
+                        }
+                        else { 
+                            Models.Company company = UserManager.GetCompany(message.Text);
+                            if (company != null)
+                            {
+                                UserManager.JoinToCompany(message.Text, message.From.Id);
+                                Screen.SendText($@"Вы добавлены как сотрудник к компании {company.Name}",client, message.Chat);
+                            }
+                            else
+                            {
+                                string secretCode = UserManager.CreateNewCompany(message.Text, message.From);
+                                Screen.SendText($@"Вы зарегистрировали компанию с именем {message.Text}. Код приглашения других сотрудников {secretCode}", client, message.Chat);
+                            }                           
+                        }
+                     
+                    }
                         break;
                 }
                         

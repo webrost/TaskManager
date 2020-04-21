@@ -27,7 +27,9 @@ namespace TaskManager.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=192.168.1.131;Initial Catalog=T;User ID=sa;Password=saP@ssw0rd;Encrypt=False;TrustServerCertificate=True");
+                //optionsBuilder.UseSqlServer("Data Source=192.168.1.131;Initial Catalog=T;User ID=sa;Password=saP@ssw0rd;Encrypt=False;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer("Data Source=homesecurity.in.ua;Initial Catalog=homesecurity;User ID=homesecurity;Password=Demo!234567;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                
             }
         }
 

@@ -9,21 +9,6 @@ namespace TaskManager.Logic
 {
     public class UserManager
     {
-        public static void CreateNewUser(Telegram.Bot.Types.User from)
-        {
-            using (Models.TContext model = new Models.TContext()) { 
-                if(model.User.Count(x=>x.TelegramId == from.Id) == 0)
-                {
-                    model.Add(new Models.User() {
-                        Name = $"{from.FirstName} {from.LastName}",
-                        CreatedTime = DateTime.Now,
-                        TelegramId = from.Id                        
-                    });
-                    model.SaveChanges();
-                }
-            }
-        }
-
         public static bool IsUserExists(Telegram.Bot.Types.User from)
         {
             using (Models.TContext model = new Models.TContext())
@@ -60,6 +45,26 @@ namespace TaskManager.Logic
             return ret;
         }
 
+        public static List<Models.Task> GetUserTasks(int userId)
+        {
+            List<Models.Task> ret = new List<Models.Task>();
+            using (Models.TContext model = new Models.TContext())
+            {
+                ret = model.Task.Where(x => x.UserId == userId).ToList();
+            }
+            return ret;
+        }
+
+        public static Models.User GetUser(int userId)
+        {
+            Models.User ret = new Models.User();
+            using (Models.TContext model = new Models.TContext())
+            {
+                ret = model.User.First(x => x.Id == userId);
+            }
+            return ret;
+        }
+
         public static int GetUserId(long telegramId)
         {
             int ret = -1;
@@ -73,38 +78,47 @@ namespace TaskManager.Logic
             return ret;
         }
 
-        public static int GetCompanyId(string secretCode)
+        public static Models.Company GetCompany(string secretCode)
         {
-            int ret = -1;
+            Models.Company ret = null;
             using (Models.TContext model = new Models.TContext())
             {
                 if (model.Company.Count(x => x.SecretCode == secretCode) > 0)
                 {
-                    ret = model.Company.First(x => x.SecretCode == secretCode).Id;
+                    ret = model.Company.First(x => x.SecretCode == secretCode);
                 }
             }
             return ret;
         }
 
-        public static int CreateNewCompany(string name)
+        public static string CreateNewCompany(string name, Telegram.Bot.Types.User from)
         {
             Random rnd = new Random();
             Models.Company c = new Models.Company();
             string secretCode = "#"+rnd.Next(10000000, 99999999).ToString();
             using (Models.TContext model = new Models.TContext ()) {
                 if (model.Company.Count(x=>x.Name == name) == 0)
-                {
-                    
+                {                    
                     c.Name = name;
                     c.SecretCode = secretCode;
                     model.Add(c);
                     model.SaveChanges();
+
+                    int roleId = model.Role.First(x => x.Name == "Boss").Id;
+                    model.Add(new Models.User()
+                    {
+                        Name = $"{from.FirstName} {from.LastName}",
+                        CreatedTime = DateTime.Now,
+                        TelegramId = from.Id,
+                        CompanyId = c.Id,
+                        RoleId = roleId
+                    });
+                    model.SaveChanges();
                 }
-                else {
-                    secretCode = model.Company.First(x => x.Name == name).SecretCode;
-                }
+
+
             }
-            return c.Id;
+            return secretCode;
         }
 
         public static string JoinToCompany(string secretCode, int telegramUserId)
@@ -118,6 +132,9 @@ namespace TaskManager.Logic
 
                         Models.User u = model.User.First(x => x.TelegramId == telegramUserId);
                         u.CompanyId = c.Id;
+
+                        int roleId = model.Role.First(x => x.Name == "Subordinator").Id;
+                        u.RoleId = roleId;
                         model.SaveChanges();
                     }
                 }
