@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TaskManager.Models;
 using Telegram.Bot.Types.ReplyMarkups;
+using TaskManager.Helpers;
 
 namespace TaskManager.Controllers
 {
@@ -37,6 +38,8 @@ namespace TaskManager.Controllers
         public List<Models.User> testc()
         {
             List<Models.User> m = new List<Models.User>();
+            Telegram.Bot.Types.ChatId chatId = new ChatId(303268292);            
+            client.SendTextMessageAsync(chatId,"xxxxx");
             return m;           
         }
 
@@ -47,17 +50,8 @@ namespace TaskManager.Controllers
             {
                 string value = reader.ReadToEndAsync().Result;
                 Telegram.Bot.Types.Update update = JsonConvert.DeserializeObject<Telegram.Bot.Types.Update>(value);
-               
-                var x = update.Type;
-                switch (update.Type) {
-                    case Telegram.Bot.Types.Enums.UpdateType.Message:
-                        Logic.Router.RunCommand(update.Message, client);
-                        break;
-                    case Telegram.Bot.Types.Enums.UpdateType.CallbackQuery:
-                        Logic.Router.RunInlineCommand(update.CallbackQuery,client, update.CallbackQuery);
-                        break;
-                }
-                                
+                FlowRunner flowRunner = new FlowRunner();
+                flowRunner.Execute(update);
             }
         }
 

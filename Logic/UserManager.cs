@@ -17,14 +17,14 @@ namespace TaskManager.Logic
             }
         }
 
-        public static List<Models.User> getMyUsers(Telegram.Bot.Types.Message message)
+        public static List<Models.User> getMyUsers(Helpers.Commands.BaseCommand command)
         {
             List<Models.User> ret = new List<Models.User>();
             using (Models.TContext model = new Models.TContext())
             {
-                if(model.User.Count(x=>x.TelegramId == message.From.Id) > 0)
+                if(model.User.Count(x=>x.TelegramId == command.FromId) > 0)
                 {
-                    var me = model.User.First(x => x.TelegramId == message.From.Id);
+                    var me = model.User.First(x => x.TelegramId == command.FromId);
                     if(me.CompanyId != null)
                     {
                         ret = model.User.Where(x=>x.CompanyId == me.CompanyId).ToList();
@@ -91,11 +91,11 @@ namespace TaskManager.Logic
             return ret;
         }
 
-        public static string CreateNewCompany(string name, Telegram.Bot.Types.User from)
+        public static string CreateNewCompany(string name, Telegram.Bot.Types.User from, Telegram.Bot.Types.Chat chat)
         {
             Random rnd = new Random();
             Models.Company c = new Models.Company();
-            string secretCode = "#"+rnd.Next(10000000, 99999999).ToString();
+            string secretCode = "_"+rnd.Next(10000000, 99999999).ToString();
             using (Models.TContext model = new Models.TContext ()) {
                 if (model.Company.Count(x=>x.Name == name) == 0)
                 {                    
@@ -111,7 +111,8 @@ namespace TaskManager.Logic
                         CreatedTime = DateTime.Now,
                         TelegramId = from.Id,
                         CompanyId = c.Id,
-                        RoleId = roleId
+                        RoleId = roleId,
+                        TelegramChatId = chat.Id.ToString()
                     });
                     model.SaveChanges();
                 }
@@ -121,20 +122,25 @@ namespace TaskManager.Logic
             return secretCode;
         }
 
-        public static string JoinToCompany(string secretCode, int telegramUserId)
+        public static string JoinToCompany(string secretCode, Telegram.Bot.Types.User from, Telegram.Bot.Types.Chat chat)
         {
             using (Models.TContext model = new Models.TContext())
             {
-                if (model.User.Count(x => x.TelegramId == telegramUserId) > 0)
+                if (model.User.Count(x => x.TelegramId == from.Id) == 0)
                 {
                     if (model.Company.Count(x=>x.SecretCode == secretCode) > 0) {
                         Models.Company c = model.Company.First(x => x.SecretCode == secretCode);
 
-                        Models.User u = model.User.First(x => x.TelegramId == telegramUserId);
-                        u.CompanyId = c.Id;
-
                         int roleId = model.Role.First(x => x.Name == "Subordinator").Id;
-                        u.RoleId = roleId;
+                        model.Add(new Models.User()
+                        {
+                            Name = $"{from.FirstName} {from.LastName}",
+                            CreatedTime = DateTime.Now,
+                            TelegramId = from.Id,
+                            CompanyId = c.Id,
+                            RoleId = roleId,
+                            TelegramChatId = chat.Id.ToString()
+                        });
                         model.SaveChanges();
                     }
                 }

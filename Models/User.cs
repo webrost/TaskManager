@@ -20,6 +20,7 @@ namespace TaskManager.Models
         public long? TelegramId { get; set; }
         public DateTime? CreatedTime { get; set; }
         public DateTime? LockedTime { get; set; }
+        public string TelegramChatId { get; set; }
 
         public virtual Company Company { get; set; }
         public virtual Role Role { get; set; }

@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 using TaskManager.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
+using Telegram.Bot.Requests;
 
 namespace TaskManager.Logic
 {
     public class TaskManager
     {
-        public static int OpenNewTaskForEdit(Telegram.Bot.Types.Message message, int userId)
+        public static int OpenNewTaskForEdit(Helpers.Commands.BaseCommand command, int userId)
         {
-            CloseOpenedEditTasks(message);
+            CloseOpenedEditTasks(command);
             using (Models.TContext model = new Models.TContext())
             {
                 var task = new Models.Task()
                 {
                     Name = "",
                     CreatedTime = DateTime.Now,
-                    CreatedBy = UserManager.GetUserId(message.Chat.Id),
+                    CreatedBy = UserManager.GetUserId(command.Message.Chat.Id),
                     UserId = userId,
                     TechStatus = TechStatusEnum.InEdit.ToString(),                    
                 };
@@ -31,12 +32,12 @@ namespace TaskManager.Logic
             }
         }
 
-        public static int GetOpenedEditTaskId(Telegram.Bot.Types.Message message)
+        public static int GetOpenedEditTaskId(long telegramUserId)
         {
             int ret = -1;
             using (Models.TContext model = new Models.TContext())
             {
-                var me = model.User.First(x => x.TelegramId == message.From.Id);
+                var me = model.User.First(x => x.TelegramId == telegramUserId);
                 if(model.Task.Count(x=>x.CreatedBy == me.Id && x.TechStatus == Models.TechStatusEnum.InEdit.ToString()) > 0)
                 {
                     ret = model.Task.First(x => x.CreatedBy == me.Id && x.TechStatus == Models.TechStatusEnum.InEdit.ToString()).Id;
@@ -46,11 +47,11 @@ namespace TaskManager.Logic
             return ret;
         }
 
-        public static void CloseOpenedEditTasks(Telegram.Bot.Types.Message message)
+        public static void CloseOpenedEditTasks(Helpers.Commands.BaseCommand command)
         {
             using (Models.TContext model = new Models.TContext())
             {
-                foreach(var task in model.Task.Where(x=>x.CreatedBy == UserManager.GetUserId(message.From.Id)
+                foreach(var task in model.Task.Where(x=>x.CreatedBy == UserManager.GetUserId(command.FromId)
                 && x.TechStatus == Models.TechStatusEnum.InEdit.ToString()))
                 {
                     task.TechStatus = Models.TechStatusEnum.CompleteEdit.ToString();
@@ -62,7 +63,7 @@ namespace TaskManager.Logic
         public static int AddMessage(Telegram.Bot.Types.Message message, Telegram.Bot.TelegramBotClient client)
         {
             int ret = 1;
-            int taskId = GetOpenedEditTaskId(message);
+            int taskId = GetOpenedEditTaskId(message.From.Id);
             using (Models.TContext model = new Models.TContext())
             {
                 var m = new Models.Message();
