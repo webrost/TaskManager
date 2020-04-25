@@ -42,15 +42,14 @@ namespace TaskManager.Helpers.CommandExecutors
 
             ///--define keydoard
             List<Commands.BaseCommand> keyboardCommands = new List<Commands.BaseCommand>();
-            keyboardCommands.Add(new CloseTaskCommand(new List<KeyValuePair<string, string>>()));            
+            keyboardCommands.Add(new CloseTaskCommand(OnCommand.Update, new List<KeyValuePair<string, string>>()));            
             screen.Keyboard = keyboardCommands;
 
 
             ///--define display message 
             screen.Messages.Add(new Messages.TextMessage(OnCommand)
             {
-                TextRU = $@"Введите содержимое задачи",
-                TextEN = $@"Enter task"
+                Text = Logic.Translator.GetText("WriteMessageToOpenedTaskMessage", OnCommand.Message.From.LanguageCode)
             }) ;
 
             screen.Show();

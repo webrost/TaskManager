@@ -8,8 +8,7 @@ namespace TaskManager.Helpers.Messages
 {
     public class TextMessage:BaseMessage
     {
-        public string TextRU { get; set; }
-        public string TextEN { get; set; }
+        public string Text { get; set; }
 
         public TextMessage(Commands.BaseCommand command):base(command)
         {
@@ -20,11 +19,11 @@ namespace TaskManager.Helpers.Messages
         {            
             if(orientation == ButtonsOrientationEnum.Horizontal)
             {
-                Client.SendTextMessageAsync(Command.ChatId, TextRU, replyMarkup: GetHorizontalInlineKeyboard()).Wait();
+                Client.SendTextMessageAsync(Command.ChatId, Text, replyMarkup: GetHorizontalInlineKeyboard(), parseMode: Telegram.Bot.Types.Enums.ParseMode.Html).Wait();
             }
             else
             {
-                Client.SendTextMessageAsync(Command.ChatId, TextRU, replyMarkup: GetVerticlalInlineKeyboard()).Wait();
+                Client.SendTextMessageAsync(Command.ChatId, Text, replyMarkup: GetVerticlalInlineKeyboard(), parseMode: Telegram.Bot.Types.Enums.ParseMode.Html).Wait();
             }
             
         }

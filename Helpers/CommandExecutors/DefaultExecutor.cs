@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using TaskManager.Logic;
 using TaskManager.Helpers.Commands;
+using Telegram.Bot.Requests;
 
 namespace TaskManager.Helpers.CommandExecutors
 {
@@ -32,15 +33,16 @@ namespace TaskManager.Helpers.CommandExecutors
 
             ///--define keydoard
             List<Commands.BaseCommand> keyboardCommands = new List<Commands.BaseCommand>();
-            keyboardCommands.Add(new SelectUserForTaskCommand(new List<KeyValuePair<string,string>>()));
-            keyboardCommands.Add(new ListUsersWithTasksCommand(new List<KeyValuePair<string, string>>()));
+            keyboardCommands.Add(new SelectUserForTaskCommand(OnCommand.Update, new List<KeyValuePair<string,string>>()));
+            keyboardCommands.Add(new ListUsersWithTasksCommand(OnCommand.Update, new List<KeyValuePair<string, string>>()));
             screen.Keyboard = keyboardCommands;
+
+
 
             ///--define display message with inline keys
             screen.Messages.Add(new Messages.TextMessage(OnCommand)
             {
-                TextRU = $@"Выберите команду",
-                TextEN = $@"Select command"
+                Text = Translator.GetText("DefaultMessage", OnCommand.Message.From.LanguageCode)
             }) ;
 
             screen.Show();

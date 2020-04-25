@@ -39,18 +39,16 @@ namespace TaskManager.Helpers.CommandExecutors
             {
                 List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
                 parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
-                Commands.OpenNewTaskCommand inilneCommand = new Commands.OpenNewTaskCommand(parameters);
+                Commands.OpenNewTaskCommand inilneCommand = new Commands.OpenNewTaskCommand(OnCommand.Update, parameters);
                 Models.TasksInfo taskInfo = Logic.TaskManager.GetTaskCount(user.Id);
-                inilneCommand.RU = $@"{user.Name} ({taskInfo.CompletedTask}/{taskInfo.CountAllTask})";
-                inilneCommand.EN = $@"{user.Name} ({taskInfo.CompletedTask}/{taskInfo.CountAllTask})";
+                inilneCommand.Text = $@"{user.Name} ({taskInfo.CompletedTask}/{taskInfo.CountAllTask})";
                 usersCommands.Add(inilneCommand);
             }
 
             ///--define display message with inline keys
             screen.Messages.Add(new Messages.TextMessage(OnCommand)
             {
-                TextRU = $@"Выберите исполнителя",
-                TextEN = $@"Select executor",
+                Text = Logic.Translator.GetText("SelectUserForTaskMessage", OnCommand.Message.From.LanguageCode),
                 InlineCommands = usersCommands
             }) ;
 

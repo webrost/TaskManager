@@ -37,21 +37,29 @@ namespace TaskManager.Helpers.CommandExecutors
 
             ///--define keydoard
             List<Commands.BaseCommand> keyboardCommands = new List<Commands.BaseCommand>();
-            keyboardCommands.Add(new SelectUserForTaskCommand(new List<KeyValuePair<string, string>>()));
-            keyboardCommands.Add(new ListUsersWithTasksCommand(new List<KeyValuePair<string, string>>()));
+            keyboardCommands.Add(new SelectUserForTaskCommand(OnCommand.Update, new List<KeyValuePair<string, string>>()));
+            keyboardCommands.Add(new ListUsersWithTasksCommand(OnCommand.Update, new List<KeyValuePair<string, string>>()));
             screen.Keyboard = keyboardCommands;
 
+            List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+            parameters.Add(new KeyValuePair<string, string>("code", secretCode));
 
             ///--define display message 
             screen.Messages.Add(new Messages.TextMessage(OnCommand)
-            {
-                TextRU = $@"Вы создали компанию {OnCommand.Message.Text}. Отошлите код приглашения.",
-                TextEN = $@"Enter task"
+            {                
+                Text = Logic.Translator.GetText("CreateNewCompanyMessage1", OnCommand.Message.From.LanguageCode, parameters)
             }) ;
             screen.Messages.Add(new Messages.TextMessage(OnCommand)
             {
-                TextRU = $@"{secretCode}",
-                TextEN = $@"{secretCode}"
+                Text = Logic.Translator.GetText("CreateNewCompanyMessage2", OnCommand.Message.From.LanguageCode)
+            });
+            screen.Messages.Add(new Messages.TextMessage(OnCommand)
+            {
+                Text = Logic.Translator.GetText("CreateNewCompanyMessage3", OnCommand.Message.From.LanguageCode)
+            });
+            screen.Messages.Add(new Messages.TextMessage(OnCommand)
+            {
+                Text = Logic.Translator.GetText("CreateNewCompanyMessage4", OnCommand.Message.From.LanguageCode)
             });
 
             screen.Show();

@@ -8,10 +8,8 @@ namespace TaskManager.Helpers.Commands
     public class WriteMessageToOpenedTaskCommand : BaseCommand
     {
         static CommandEnum _code = CommandEnum.WriteMessageToOpenedTask;
-        static string _RU = $@"";
-        static string _EN = $@"";
 
-        public WriteMessageToOpenedTaskCommand(Telegram.Bot.Types.Update update):base(update, _RU, _EN, _code)
+        public WriteMessageToOpenedTaskCommand(Telegram.Bot.Types.Update update):base(update, _code)
         {
             if(update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {
@@ -22,11 +20,9 @@ namespace TaskManager.Helpers.Commands
             }
         }
 
-        public WriteMessageToOpenedTaskCommand(List<KeyValuePair<string,string>> p):base(p)
+        public WriteMessageToOpenedTaskCommand(Telegram.Bot.Types.Update update, List<KeyValuePair<string, string>> p) : base(update, _code, p)
         {
-            base.Code = _code;
-            base.RU = _RU;
-            base.EN = _EN;
+
         }
     }
 }

@@ -34,7 +34,7 @@ namespace TaskManager.Helpers.Messages
             {
                 var row = new List<InlineKeyboardButton>();
                 row.Add(new InlineKeyboardButton() { 
-                    Text = button.RU,
+                    Text = button.Text,
                     CallbackData = button.Code+"?"+String.Join('&',button.Parameters.Select(x=>x.Key+"="+x.Value))
                 });
                 keyboard.Add(row);
@@ -50,7 +50,7 @@ namespace TaskManager.Helpers.Messages
                 var row = new List<InlineKeyboardButton>();
                 row.Add(new InlineKeyboardButton()
                 {
-                    Text = button.RU,
+                    Text = button.Text,
                     CallbackData = button.Code + "?" + String.Join('&', button.Parameters.Select(x => x.Key + "=" + x.Value))
                 });
                 keyboard.Add(row);

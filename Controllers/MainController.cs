@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using TaskManager.Models;
 using Telegram.Bot.Types.ReplyMarkups;
 using TaskManager.Helpers;
+using Microsoft.AspNetCore.Hosting;
 
 namespace TaskManager.Controllers
 {
@@ -23,10 +24,12 @@ namespace TaskManager.Controllers
     {
 
         private static TelegramBotClient client;
+        private IHostingEnvironment _hostingEnv;
 
-        public MainController(IOptions<Models.BotConfig> config)
+        public MainController(IOptions<Models.BotConfig> config, IHostingEnvironment hostingEnv)
         {
             string token = config.Value.TelegramBotTocken;
+            _hostingEnv = hostingEnv;
             client = new TelegramBotClient(token);
         }
 
@@ -50,7 +53,8 @@ namespace TaskManager.Controllers
             {
                 string value = reader.ReadToEndAsync().Result;
                 Telegram.Bot.Types.Update update = JsonConvert.DeserializeObject<Telegram.Bot.Types.Update>(value);
-                FlowRunner flowRunner = new FlowRunner();
+                FlowRunner.hostingEnvironment = _hostingEnv;
+                FlowRunner flowRunner = new FlowRunner();                
                 flowRunner.Execute(update);
             }
         }

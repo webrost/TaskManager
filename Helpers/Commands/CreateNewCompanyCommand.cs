@@ -8,10 +8,8 @@ namespace TaskManager.Helpers.Commands
     public class CreateNewCompanyCommand : BaseCommand
     {
         static CommandEnum _code = CommandEnum.CreateNewCompany;
-        static string _RU = $@"Создать новую компанию";
-        static string _EN = $@"Create new company";
 
-        public CreateNewCompanyCommand(Telegram.Bot.Types.Update update):base(update, _RU, _EN, _code)
+        public CreateNewCompanyCommand(Telegram.Bot.Types.Update update):base(update, _code)
         {
             if(update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {
@@ -23,11 +21,8 @@ namespace TaskManager.Helpers.Commands
             }
         }
 
-        public CreateNewCompanyCommand(List<KeyValuePair<string,string>> p):base(p)
+        public CreateNewCompanyCommand(Telegram.Bot.Types.Update update, List<KeyValuePair<string,string>> p):base(update, _code, p)
         {
-            base.Code = _code;
-            base.RU = _RU;
-            base.EN = _EN;
         }
     }
 }

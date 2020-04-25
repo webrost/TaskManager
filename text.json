@@ -1,0 +1,122 @@
+﻿[
+  {
+    "en": "Create new company",
+    "id": "CreateNewCompanyCommand",
+    "ru": "Создать новую компанию"
+  },
+  {
+    "en": "",
+    "id": "StartCommand",
+    "ru": ""
+  },
+  {
+    "en": "You don't registered in this system",
+    "id": "NotRegusteredMessage",
+    "ru": "Вы не зарегистрированы в системе."
+  },
+  {
+    "en": "Enter company name",
+    "id": "EnterCompanyNameMessage",
+    "ru": "Введите имя компании"
+  },
+  {
+    "en": "Finish define command",
+    "id": "CloseTask",
+    "ru": "Окончить описание задачи"
+  },
+  {
+    "en": "Default Command",
+    "id": "DefaultCommand",
+    "ru": "Комманда по умолчанию "
+  },
+  {
+    "en": "Join to company",
+    "id": "JoinToCompany",
+    "ru": "Присоединится к компании"
+  },
+  {
+    "en": "List users with tasks",
+    "id": "ListUsersWithTasks",
+    "ru": "Показать задачи пользователя"
+  },
+  {
+    "en": "List task for user",
+    "id": "ListUserTasks",
+    "ru": "Показать задачи пользователя"
+  },
+  {
+    "en": "Describe new task for user by messages",
+    "id": "OpenNewTask",
+    "ru": "Опишите новую задачу для пользователя серией сообщений"
+  },
+  {
+    "en": "Select user for this task",
+    "id": "SelectUserForTask",
+    "ru": "Выберите пользователя для данной задачи"
+  },
+  {
+    "en": "Write message to describe task",
+    "id": "WriteMessageToOpenedTask",
+    "ru": "Опишите задачу в сообщениях"
+  },
+  {
+    "en": "CloseTaskMessage1",
+    "id": "CloseTaskMessage1",
+    "ru": "CloseTaskMessage1"
+  },
+  {
+    "en": "CreateNewCompanyMessage1 {{code}}",
+    "id": "CreateNewCompanyMessage1",
+    "ru": "CreateNewCompanyMessage1 {{code}}"
+  },
+  {
+    "en": "CreateNewCompanyMessage2",
+    "id": "CreateNewCompanyMessage2",
+    "ru": "CreateNewCompanyMessage2"
+  },
+  {
+    "en": "CreateNewCompanyMessage3",
+    "id": "CreateNewCompanyMessage3",
+    "ru": "CreateNewCompanyMessage3"
+  },
+  {
+    "en": "CreateNewCompanyMessage4",
+    "id": "CreateNewCompanyMessage4",
+    "ru": "CreateNewCompanyMessage4"
+  },
+  {
+    "en": "DefaultMessage",
+    "id": "DefaultMessage",
+    "ru": "DefaultMessage"
+  },
+  {
+    "en": "JoinToCompanyMessage",
+    "id": "JoinToCompanyMessage",
+    "ru": "JoinToCompanyMessage"
+  },
+  {
+    "en": "ListUsersWithTaskMessage",
+    "id": "ListUsersWithTaskMessage",
+    "ru": "ListUsersWithTaskMessage"
+  },
+  {
+    "en": "ListUserTasksMessage",
+    "id": "ListUserTasksMessage",
+    "ru": "ListUserTasksMessage"
+  },
+  {
+    "en": "OpenNewTaskMessage",
+    "id": "OpenNewTaskMessage",
+    "ru": "OpenNewTaskMessage"
+  },
+  {
+    "en": "SelectUserForTaskMessage",
+    "id": "SelectUserForTaskMessage",
+    "ru": "SelectUserForTaskMessage"
+  },
+  {
+    "en": "WriteMessageToOpenedTaskMessage",
+    "id": "WriteMessageToOpenedTaskMessage",
+    "ru": "WriteMessageToOpenedTaskMessage"
+  }
+]  

@@ -8,18 +8,15 @@ namespace TaskManager.Helpers.Commands
     public class SelectUserForTaskCommand : BaseCommand
     {
         static CommandEnum _code = CommandEnum.SelectUserForTask;
-        static string _RU = $@"Назначить задачу";
-        static string _EN = $@"Assign task";
 
-        public SelectUserForTaskCommand(Telegram.Bot.Types.Update update):base(update,_RU, _EN, _code)
+        public SelectUserForTaskCommand(Telegram.Bot.Types.Update update):base(update,_code)
         {
         }
 
-        public SelectUserForTaskCommand(List<KeyValuePair<string,string>> p):base(p)
+        public SelectUserForTaskCommand(Telegram.Bot.Types.Update update, List<KeyValuePair<string, string>> p) : base(update, _code, p)
         {
-            base.Code = _code;
-            base.RU = _RU;
-            base.EN = _EN;
+
+
         }
     }
 }

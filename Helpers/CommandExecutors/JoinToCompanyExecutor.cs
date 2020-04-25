@@ -37,16 +37,15 @@ namespace TaskManager.Helpers.CommandExecutors
 
             ///--define keydoard
             List<Commands.BaseCommand> keyboardCommands = new List<Commands.BaseCommand>();
-            keyboardCommands.Add(new SelectUserForTaskCommand(new List<KeyValuePair<string, string>>()));
-            keyboardCommands.Add(new ListUsersWithTasksCommand(new List<KeyValuePair<string, string>>()));
+            keyboardCommands.Add(new SelectUserForTaskCommand(OnCommand.Update, new List<KeyValuePair<string, string>>()));
+            keyboardCommands.Add(new ListUsersWithTasksCommand(OnCommand.Update, new List<KeyValuePair<string, string>>()));
             screen.Keyboard = keyboardCommands;
 
 
             ///--define display message 
             screen.Messages.Add(new Messages.TextMessage(OnCommand)
             {
-                TextRU = $@"Вы присоединились к компании {OnCommand.Message.Text}.",
-                TextEN = $@"Enter task"
+                Text = Logic.Translator.GetText("JoinToCompanyMessage", OnCommand.Message.From.LanguageCode)
             }) ;
 
             screen.Show();

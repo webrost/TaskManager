@@ -31,21 +31,17 @@ namespace TaskManager.Helpers.Screens
         }
         public void Show()
         {
-            Messages.ForEach(mes => mes.Show(Helpers.Messages.ButtonsOrientationEnum.Vertical));
-            if(Keyboard.Count() == 0)
+            for (int i = 0; i < Messages.Count()-1; i++)
             {
-                Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardRemove remove = new Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardRemove();
-                Client.SendTextMessageAsync(Command.ChatId, "--", replyMarkup: remove);
+                Messages[i].Show(Helpers.Messages.ButtonsOrientationEnum.Vertical);
             }
-            else
-            {
-                ShowKeyboard();
-            }            
+
+            ShowKeyboard(Messages[Messages.Count() - 1].Text);
         }
 
-        public void ShowKeyboard()
+        public void ShowKeyboard(string Text)
         {
-            Client.SendTextMessageAsync(Command.ChatId, "--", replyMarkup: BuildKeyboard()).Wait();
+            Client.SendTextMessageAsync(Command.ChatId, Text, replyMarkup: BuildKeyboard()).Wait();
         }
 
         Telegram.Bot.Types.ReplyMarkups.ReplyKeyboardMarkup BuildKeyboard()
@@ -59,7 +55,7 @@ namespace TaskManager.Helpers.Screens
                 var row = new List<Telegram.Bot.Types.ReplyMarkups.KeyboardButton>();
                 row.Add(new Telegram.Bot.Types.ReplyMarkups.KeyboardButton()
                 {
-                    Text = command.RU
+                    Text = command.Text
                 });
                 keyboard.Add(row);
             }

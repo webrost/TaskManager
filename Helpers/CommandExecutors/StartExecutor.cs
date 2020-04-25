@@ -36,13 +36,11 @@ namespace TaskManager.Helpers.CommandExecutors
             ///--define display message with inline keys
             screen.Messages.Add(new Messages.TextMessage(OnCommand)
             {
-                TextRU = $@"Вы не зарегистрированы в системе.",
-                TextEN = $@"Select executor"
+                Text = Logic.Translator.GetText("NotRegusteredMessage", OnCommand.Message.From.LanguageCode)            
             }) ;
             screen.Messages.Add(new Messages.TextMessage(OnCommand)
             {
-                TextRU = $@"Для создания новой Компании и регистрации в системе введите имя Компании.",
-                TextEN = $@"Select executor"
+                Text = Logic.Translator.GetText("EnterCompanyNameMessage", OnCommand.Message.From.LanguageCode)
             });
 
             screen.Show();

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TaskManager.Helpers.CommandExecutors;
+using Microsoft.AspNetCore.Hosting;
 
 namespace TaskManager.Helpers
 {
     public class FlowRunner
     {
         List<ICommandExecutor> Executors { get; set; }
+
+        public static IHostingEnvironment hostingEnvironment { get; set; }
 
         public FlowRunner()
         {
